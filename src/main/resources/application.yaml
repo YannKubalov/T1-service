@@ -1,0 +1,11 @@
+spring:
+  datasource:
+    url: jdbc:postgresql://localhost:5432/T1_DB
+    username: postgres
+    password: postgres
+    driver-class-name: org.postgresql.Driver
+    hikari.maximum-pool-size: 10
+  sql:
+    init:
+      mode: always
+      schema-locations: classpath:schema.sql
