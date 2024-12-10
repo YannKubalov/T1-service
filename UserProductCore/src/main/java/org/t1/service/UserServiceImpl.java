@@ -2,44 +2,47 @@ package org.t1.service;
 
 import org.springframework.stereotype.Service;
 import org.t1.data.User;
-import org.t1.repository.UserDao;
+import org.t1.repository.UserRepository;
 
 import java.util.List;
 
 @Service
 public class UserServiceImpl implements UserService {
-    private final UserDao userDao;
+    private final UserRepository userRepository;
 
-    public UserServiceImpl(UserDao userDao) {
-        this.userDao = userDao;
+    public UserServiceImpl(UserRepository userRepository) {
+        this.userRepository = userRepository;
     }
 
     @Override
     public void createUser(String username) {
-        userDao.createUser(username);
+        var user = new User();
+        user.setUserName(username);
+        userRepository.save(user);
     }
 
     @Override
     public User getUserById(Long id) {
-        return userDao.getUser(id);
+        return userRepository.findById(id)
+                .orElseThrow(() -> new RuntimeException("Пользователь не найден"));
     }
 
     @Override
     public List<User> getAllUsers() {
-        return userDao.getAllUsers();
+        return userRepository.findAll();
     }
 
     @Override
     public void updateUser(Long id, String username) {
-        var user = new User();
-        user.setId(id);
+        var user = getUserById(id);
         user.setUserName(username);
-        userDao.updateUser(user);
+        userRepository.save(user);
     }
 
     @Override
     public void deleteUser(Long id) {
-        userDao.deleteUser(id);
+        var user = getUserById(id);
+        userRepository.delete(user);
     }
 }
 
